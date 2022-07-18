@@ -5,8 +5,27 @@ from django.db import models
 User = get_user_model()
 
 
-class Review(models.Model):
-    """Модель отзывов."""
+class BaseModel(models.Model):
+    """Базовая модель."""
+
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='%(class)s',
+        verbose_name='Автор',
+    )
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True,
+    )
+
+    class Meta:
+        abstract = True
+        ordering = ('-pub_date',)
+
+
+class Review(BaseModel):
+    """Модель отзыва."""
 
     title = models.ForeignKey(
         'Title',
@@ -15,26 +34,15 @@ class Review(models.Model):
         verbose_name='Произведение',
     )
     text = models.TextField('Текст')
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='reviews',
-        verbose_name='Автор',
-    )
     score = models.IntegerField(
         'Оценка',
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(10)
+            MaxValueValidator(10),
         ],
     )
-    pub_date = models.DateTimeField(
-        'Дата публикации',
-        auto_now_add=True,
-    )
 
-    class Meta:
-        ordering = ('-pub_date',)
+    class Meta(BaseModel.Meta):
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
 
@@ -42,7 +50,7 @@ class Review(models.Model):
         return self.text[:30]
 
 
-class Comment(models.Model):
+class Comment(BaseModel):
     """Модель комментария к отзыву."""
 
     review = models.ForeignKey(
@@ -52,19 +60,8 @@ class Comment(models.Model):
         verbose_name='Отзыв',
     )
     text = models.TextField('Текст')
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Автор',
-    )
-    pub_date = models.DateTimeField(
-        'Дата публикации',
-        auto_now_add=True,
-    )
 
-    class Meta:
-        ordering = ('-pub_date',)
+    class Meta(BaseModel.Meta):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
