@@ -1,4 +1,6 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
+import datetime as dt
 
 
 class User(models.Model):
@@ -10,6 +12,7 @@ class Categories(models.Model):
     slug = models.SlugField('Идентификатор', unique=True)
 
     class Meta:
+        ordering = ('name',)
         verbose_name_plural = "Категории"
         verbose_name = "Категория"
 
@@ -22,6 +25,7 @@ class Genres(models.Model):
     slug = models.SlugField('Идентификатор', unique=True)
 
     class Meta:
+        ordering = ('name',)
         verbose_name_plural = "Жанры"
         verbose_name = "Жанр"
 
@@ -31,10 +35,14 @@ class Genres(models.Model):
 
 class Titles(models.Model):
     name = models.CharField('Название', max_length=200)
-    year = models.IntegerField('Год выпуска', )
+    year = models.IntegerField(
+        'Год выпуска',
+        validators=[MaxValueValidator(dt.datetime.now().year)]
+    )
     description = models.TextField('Описание')
-    genre = models.ForeignKey(
+    genre = models.ManyToManyField(
         Genres,
+        through='GenresTitles',
         on_delete=models.SET_NULL,
         related_name='titles',
         blank=True,
@@ -57,3 +65,11 @@ class Titles(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class GenresTitles(models.Model):
+    genre = models.ForeignKey(Genres, on_delete=models.CASCADE)
+    title = models.ForeignKey(Titles, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.genre} {self.title}'
