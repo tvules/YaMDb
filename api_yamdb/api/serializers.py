@@ -17,6 +17,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'author', 'score', 'pub_date')
 
     def validate(self, attrs):
+        if self.context.get('request').method != "POST":
+            return attrs
+
         author = self.context.get('request').user
         title = get_object_or_404(
             Title,
