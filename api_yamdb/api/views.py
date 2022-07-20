@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 
 from reviews.models import Title
 from .permissions import IsAuthorOrReadOnly, IsStaffOrReadOnly
-from .serializers import ReviewSerializer
+from .serializers import ReviewSerializer, CommentSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -24,3 +24,23 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user, title=self.get_title_obj())
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """ViewSet модели Comment."""
+
+    serializer_class = CommentSerializer
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsAuthorOrReadOnly | IsStaffOrReadOnly,
+    )
+
+    def get_review_obj(self):
+        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+
+    def get_queryset(self):
+        review = self.get_review_obj()
+        return review.comments.all()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user, review=self.get_review_obj())
