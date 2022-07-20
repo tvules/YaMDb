@@ -24,11 +24,15 @@ class BaseModel(models.Model):
         ordering = ('-pub_date',)
 
 
+class Title(BaseModel):
+    pass
+
+
 class Review(BaseModel):
     """Модель отзыва."""
 
     title = models.ForeignKey(
-        'Title',
+        Title,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Произведение',
