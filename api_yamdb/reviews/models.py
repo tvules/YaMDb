@@ -1,4 +1,5 @@
 from django.core.validators import MaxValueValidator
+from django.db.models import Avg
 from django.db import models
 import datetime as dt
 
@@ -43,7 +44,7 @@ class Title(models.Model):
     genre = models.ManyToManyField(
         Genre,
         through='GenreTitle',
-        related_name='title',
+        related_name='titles',
         blank=True,
         null=True,
         verbose_name='Жанр'
@@ -51,11 +52,18 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        related_name='title',
+        related_name='titles',
         blank=True,
         null=True,
         verbose_name='Категория'
     )
+
+    @property
+    def rating(self):
+        return self.reviews.all().aggregate(Avg('score')).get(
+            'score__avg',
+            0.00
+        )
 
     class Meta:
         ordering = ('name',)
