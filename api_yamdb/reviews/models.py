@@ -1,11 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator
 from django.db.models import Avg
 from django.db import models
 import datetime as dt
 
 
-class User(models.Model):
-    pass
+User = get_user_model()
 
 
 class Category(models.Model):
