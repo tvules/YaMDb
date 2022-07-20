@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, pagination
 
 from reviews.models import Title
 from .permissions import IsAuthorOrReadOnly, IsStaffOrReadOnly
@@ -14,6 +14,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsAuthorOrReadOnly | IsStaffOrReadOnly,
     )
+    pagination_class = pagination.LimitOffsetPagination
 
     def get_title_obj(self):
         return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
@@ -34,6 +35,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsAuthorOrReadOnly | IsStaffOrReadOnly,
     )
+    pagination_class = pagination.LimitOffsetPagination
 
     def get_review_obj(self):
         return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
