@@ -1,17 +1,16 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+
+from users.models import ROLE_CHOICES
 
 User = get_user_model()
 
+forbidden_names = ('me', 'admin', 'moderator')
+
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-    )
-    email = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-    )
+    role = serializers.ChoiceField(choices=ROLE_CHOICES)
 
     class Meta:
         model = User
@@ -19,19 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
             "username", "email", "first_name", "last_name", "bio", "role",)
 
     def validate_username(self, value):
-        if value == "me":
+        if value in forbidden_names:
             raise serializers.ValidationError(
-                'Недопустимое имя')
+                'Выберете другое имя')
         return value
 
 
 class UserMeSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-    )
-    email = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())],
-    )
 
     class Meta:
         model = User
@@ -40,7 +33,21 @@ class UserMeSerializer(serializers.ModelSerializer):
         read_only_fields = ("role",)
 
     def validate_username(self, value):
-        if value == "me":
+        if value in forbidden_names:
             raise serializers.ValidationError(
-                'Недопустимое имя')
+                'Выберете другое имя')
         return value
+
+
+class GetTokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+    def validate(self, data):
+        username = data.get('username')
+        user = get_object_or_404(User, username=username)
+        input_confirmation_code = data.get('confirmation_code')
+        if input_confirmation_code != user.confirmation_code:
+            raise serializers.ValidationError(
+                'Введите действующий код подтверждения.')
+        return data
