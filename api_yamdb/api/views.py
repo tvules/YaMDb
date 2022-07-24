@@ -37,11 +37,9 @@ class SignupView(APIView):
     def post(self, request):
         from_email = None
         confirmation_code = str(uuid.uuid4())
-        serializer = UserMeSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data.get('email')
-        username = serializer.validated_data.get('username')
+        email = request.data.get('email')
         if User.objects.filter(email=email).exists():
+            username = request.data.get('username')
             send_mail(username, confirmation_code, from_email, [email])
             user = get_object_or_404(User, email=email)
             user.confirmation_code = confirmation_code
@@ -50,6 +48,10 @@ class SignupView(APIView):
                 {'username': str(username),
                  'email': str(email)},
                 status=status.HTTP_200_OK)
+        serializer = UserMeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data.get('email')
+        username = serializer.validated_data.get('username')
         send_mail(username, confirmation_code, from_email, [email])
         serializer.save(confirmation_code=confirmation_code)
         return Response(serializer.data, status=status.HTTP_200_OK)
