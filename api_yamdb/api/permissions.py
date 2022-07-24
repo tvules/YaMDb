@@ -11,3 +11,13 @@ class UserMePermission(permissions.BasePermission):
                 request.method in permissions.SAFE_METHODS
                 or request.method == 'PATCH')
         )
+
+
+class IsModeratorOrReadOnly(permissions.BasePermission):
+    message = 'Отказано в доступе!'
+
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.method in permissions.SAFE_METHODS
+            or request.user.role == 'moderator'
+        )
