@@ -10,7 +10,7 @@ forbidden_names = ('me', 'admin', 'moderator')
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.ChoiceField(choices=ROLE_CHOICES)
+    role = serializers.ChoiceField(choices=ROLE_CHOICES, required=False)
 
     class Meta:
         model = User
@@ -31,6 +31,19 @@ class UserMeSerializer(serializers.ModelSerializer):
         fields = (
             "username", "email", "first_name", "last_name", "bio", "role",)
         read_only_fields = ("role",)
+
+    def validate_username(self, value):
+        if value in forbidden_names:
+            raise serializers.ValidationError(
+                'Выберете другое имя')
+        return value
+
+
+class SignupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ("username", "email",)
 
     def validate_username(self, value):
         if value in forbidden_names:

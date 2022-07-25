@@ -5,12 +5,7 @@ class UserMePermission(permissions.BasePermission):
     message = 'Отказано в доступе!'
 
     def has_permission(self, request, view):
-        return (
-            request.user.is_authenticated
-            and (
-                request.method in permissions.SAFE_METHODS
-                or request.method == 'PATCH')
-        )
+        return (request.user.is_authenticated)
 
 
 class IsModeratorOrReadOnly(permissions.BasePermission):
@@ -21,3 +16,12 @@ class IsModeratorOrReadOnly(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS
             or request.user.role == 'moderator'
         )
+
+
+class IsAdminPermission(permissions.BasePermission):
+    message = 'Отказано в доступе!'
+
+    def has_permission(self, request, view):
+        return (
+            request.user.is_authenticated
+            and (request.user.role == 'admin' or request.user.is_superuser))
