@@ -3,20 +3,22 @@ import uuid
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
-    mixins, response, status, views, viewsets, permissions, pagination
+    filters, mixins, response, status, views, viewsets, permissions, pagination
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from reviews.models import Genre, Category, Title
 from .pagination import UserPagination
 from .permissions import (
     IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly
 )
 from .serializers import (
+    CategorySerializer, GenreSerializer, TitleSerializer,
     GetTokenSerializer, SignupSerializer, UserMeSerializer, UserSerializer,
     ReviewSerializer, CommentSerializer
 )
-from reviews.models import Title
 
 User = get_user_model()
 
@@ -65,6 +67,41 @@ class GetTokenView(views.APIView):
             {'token': str(token)},
             status=status.HTTP_200_OK
         )
+
+
+class ListCreateDestroyViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
+    pass
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = (
+        'genre__slug',
+        'category__slug',
+        'year',
+        'name',
+    )
+
+
+class CategoryViewSet(ListCreateDestroyViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
+
+
+class GenreViewSet(ListCreateDestroyViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
