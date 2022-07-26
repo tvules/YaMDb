@@ -12,7 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Genre, Category, Title
 from .pagination import UserPagination
 from .permissions import (
-    IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly
+    IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly,
+    CategoriesGenresPermission, TitlesPermission
 )
 from .serializers import (
     CategorySerializer, GenreSerializer, TitleSerializer,
@@ -88,6 +89,7 @@ class TitleViewSet(viewsets.ModelViewSet):
         'year',
         'name',
     )
+    permission_classes = (TitlesPermission,)
 
 
 class CategoryViewSet(ListCreateDestroyViewSet):
@@ -95,6 +97,8 @@ class CategoryViewSet(ListCreateDestroyViewSet):
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    permission_classes = (CategoriesGenresPermission,)
+    lookup_field = "slug"
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
@@ -102,6 +106,8 @@ class GenreViewSet(ListCreateDestroyViewSet):
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    permission_classes = (CategoriesGenresPermission,)
+    lookup_field = "slug"
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

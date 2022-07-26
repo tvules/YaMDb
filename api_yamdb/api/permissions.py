@@ -44,3 +44,21 @@ class IsStaffOrReadOnly(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS
             or request.user.is_staff
         )
+
+
+class CategoriesGenresPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.user.is_authenticated and request.user.role == "admin"
+            or request.user.is_superuser)
+
+
+class TitlesPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.user.is_authenticated
+            and request.method in permissions.SAFE_METHODS
+            or (request.user.role == "admin" or request.user.is_superuser)
+        )
