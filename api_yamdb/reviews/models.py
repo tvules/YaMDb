@@ -3,7 +3,6 @@ import datetime as dt
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Avg
 
 User = get_user_model()
 
@@ -75,13 +74,6 @@ class Title(models.Model):
         null=True,
         verbose_name='Категория'
     )
-
-    @property
-    def rating(self):
-        return self.reviews.all().aggregate(Avg('score')).get(
-            'score__avg',
-            0.00
-        )
 
     class Meta:
         ordering = ('name',)
