@@ -1,8 +1,8 @@
+from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import serializers
 
-from reviews.models import Title, Review, Comment
+from reviews.models import Category, Title, Genre, Review, Comment
 from users.models import ROLE_CHOICES
 
 User = get_user_model()
@@ -67,6 +67,29 @@ class GetTokenSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Введите действующий код подтверждения.')
         return data
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Genre
+        fields = '__all__'
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
+
+    class Meta:
+        model = Title
+        fields = '__all__'
 
 
 class ReviewSerializer(serializers.ModelSerializer):
