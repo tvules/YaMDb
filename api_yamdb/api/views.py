@@ -49,6 +49,18 @@ class SignupView(views.APIView):
     def post(self, request):
         from_email = None
         confirmation_code = str(uuid.uuid4())
+        email = request.data.get('email')
+        username = request.data.get('username')
+
+        if User.objects.filter(username=username).filter(email=email).exists():
+            send_mail(username, confirmation_code, from_email, [email])
+            user = User.objects.get(email=email)
+            user.confirmation_code = confirmation_code
+            user.save()
+            return response.Response(
+                {'email': str(email), 'username': str(username)},
+                status=status.HTTP_200_OK)
+
         serializer = SignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
