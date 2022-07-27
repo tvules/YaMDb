@@ -27,5 +27,13 @@ class User(AbstractUser):
     confirmation_code = models.CharField(
         editable=False, max_length=50, blank=True)
 
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
+
+    @property
+    def is_moderator(self):
+        return self.role == 'moderator'
+
     def __str__(self):
         return self.username
