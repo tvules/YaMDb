@@ -137,7 +137,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         )
 
         if title.reviews.filter(author=author).exists():
-            return serializers.ValidationError(
+            raise serializers.ValidationError(
                 'Нельзя оставлять больше одного отзыва.'
             )
 

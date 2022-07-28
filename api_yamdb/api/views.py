@@ -10,7 +10,7 @@ from rest_framework import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Genre, Category, Title
+from reviews.models import Genre, Category, Title, Review
 from .pagination import UserPagination
 from .permissions import (
     IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly,
@@ -175,7 +175,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     pagination_class = pagination.LimitOffsetPagination
 
     def get_review_obj(self):
-        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        return get_object_or_404(Review, pk=self.kwargs.get('review_id'))
 
     def get_queryset(self):
         review = self.get_review_obj()
