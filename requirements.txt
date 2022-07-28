@@ -10,3 +10,4 @@ flake8==4.0.1
 pre-commit==2.20.0
 django-filter==2.4.0
 black==22.6.0
+isort==5.10.1
