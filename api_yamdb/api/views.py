@@ -1,5 +1,6 @@
 import uuid
 
+import django_filters
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -12,12 +13,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from reviews.models import Genre, Category, Title
 from .pagination import UserPagination
 from .permissions import (
-    IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly
+    IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly,
+    IsAdminOrReadOnly,
 )
 from .serializers import (
-    CategorySerializer, GenreSerializer, TitleSerializer,
-    GetTokenSerializer, SignupSerializer, UserMeSerializer, UserSerializer,
-    ReviewSerializer, CommentSerializer
+    CategorySerializer, GenreSerializer, TitleGetSerializer,
+    TitlePostSerializer, GetTokenSerializer, SignupSerializer,
+    UserMeSerializer, UserSerializer, ReviewSerializer,
+    CommentSerializer,
 )
 
 User = get_user_model()
@@ -90,16 +93,36 @@ class ListCreateDestroyViewSet(
     pass
 
 
+class TitleFilter(django_filters.FilterSet):
+    genre = django_filters.CharFilter(
+        field_name="genre__slug", lookup_expr='icontains'
+    )
+    category = django_filters.CharFilter(
+        field_name="category__slug", lookup_expr='icontains'
+    )
+    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Title
+        fields = [
+            'genre',
+            'category',
+            'year',
+            'name',
+        ]
+
+
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
+    serializer_class = TitleGetSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = (
-        'genre__slug',
-        'category__slug',
-        'year',
-        'name',
-    )
+    filterset_class = TitleFilter
+    permission_classes = (IsAdminOrReadOnly,)
+
+    def get_serializer_class(self):
+        if self.action in {'list', 'retrieve'}:
+            return TitleGetSerializer
+        return TitlePostSerializer
 
 
 class CategoryViewSet(ListCreateDestroyViewSet):
@@ -107,6 +130,8 @@ class CategoryViewSet(ListCreateDestroyViewSet):
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    permission_classes = (IsAdminOrReadOnly,)
+    lookup_field = "slug"
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
@@ -114,6 +139,8 @@ class GenreViewSet(ListCreateDestroyViewSet):
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+    permission_classes = (IsAdminOrReadOnly,)
+    lookup_field = "slug"
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
