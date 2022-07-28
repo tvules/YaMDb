@@ -8,29 +8,29 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     filters,
     mixins,
-    pagination,
-    permissions,
     response,
     status,
     views,
     viewsets,
+    permissions,
+    pagination,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
-from reviews.models import Category, Genre, Review, Title
 
+from reviews.models import Genre, Category, Title, Review
 from .pagination import UserPagination
-from .permissions import IsAdmin, IsAuthorOrStaff, ReadOnly
+from .permissions import IsAdmin, ReadOnly, IsAuthorOrStaff
 from .serializers import (
     CategorySerializer,
-    CommentSerializer,
     GenreSerializer,
-    GetTokenSerializer,
-    ReviewSerializer,
-    SignupSerializer,
     TitleGetSerializer,
     TitlePostSerializer,
+    GetTokenSerializer,
+    SignupSerializer,
     UserMeSerializer,
     UserSerializer,
+    ReviewSerializer,
+    CommentSerializer,
 )
 
 User = get_user_model()
