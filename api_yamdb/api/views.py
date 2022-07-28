@@ -6,20 +6,30 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
-    filters, mixins, response, status, views, viewsets, permissions, pagination
+    filters,
+    mixins,
+    response,
+    status,
+    views,
+    viewsets,
+    permissions,
+    pagination,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from reviews.models import Genre, Category, Title, Review
 from .pagination import UserPagination
-from .permissions import (
-    IsAdminPermission, IsAuthorOrReadOnly, IsStaffOrReadOnly,
-    IsAdminOrReadOnly,
-)
+from .permissions import IsAdmin, ReadOnly, IsAuthorOrStaff
 from .serializers import (
-    CategorySerializer, GenreSerializer, TitleGetSerializer,
-    TitlePostSerializer, GetTokenSerializer, SignupSerializer,
-    UserMeSerializer, UserSerializer, ReviewSerializer,
+    CategorySerializer,
+    GenreSerializer,
+    TitleGetSerializer,
+    TitlePostSerializer,
+    GetTokenSerializer,
+    SignupSerializer,
+    UserMeSerializer,
+    UserSerializer,
+    ReviewSerializer,
     CommentSerializer,
 )
 
@@ -29,14 +39,14 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminPermission,)
+    permission_classes = (IsAdmin,)
     pagination_class = UserPagination
     lookup_field = 'username'
 
 
-class UserMeViewSet(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    viewsets.GenericViewSet):
+class UserMeViewSet(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
     serializer_class = UserMeSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -45,7 +55,6 @@ class UserMeViewSet(mixins.RetrieveModelMixin,
 
 
 class SignupView(views.APIView):
-
     def post(self, request):
         from_email = None
         confirmation_code = str(uuid.uuid4())
@@ -59,7 +68,8 @@ class SignupView(views.APIView):
             user.save()
             return response.Response(
                 {'email': str(email), 'username': str(username)},
-                status=status.HTTP_200_OK)
+                status=status.HTTP_200_OK,
+            )
 
         serializer = SignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -71,7 +81,6 @@ class SignupView(views.APIView):
 
 
 class GetTokenView(views.APIView):
-
     def post(self, request):
         serializer = GetTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -79,8 +88,7 @@ class GetTokenView(views.APIView):
         user = User.objects.get(username=username)
         token = str(RefreshToken.for_user(user).access_token)
         return response.Response(
-            {'token': str(token)},
-            status=status.HTTP_200_OK
+            {'token': str(token)}, status=status.HTTP_200_OK
         )
 
 
@@ -88,7 +96,7 @@ class ListCreateDestroyViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     pass
 
@@ -117,7 +125,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleGetSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdmin | ReadOnly,)
 
     def get_serializer_class(self):
         if self.action in {'list', 'retrieve'}:
@@ -130,7 +138,7 @@ class CategoryViewSet(ListCreateDestroyViewSet):
     serializer_class = CategorySerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdmin | ReadOnly,)
     lookup_field = "slug"
 
 
@@ -139,7 +147,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
     serializer_class = GenreSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAdmin | ReadOnly,)
     lookup_field = "slug"
 
 
@@ -147,10 +155,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     """ViewSet модели Review."""
 
     serializer_class = ReviewSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsAuthorOrReadOnly | IsStaffOrReadOnly,
-    )
+    permission_classes = (IsAuthorOrStaff | ReadOnly,)
     pagination_class = pagination.LimitOffsetPagination
 
     def get_title_obj(self):
@@ -168,10 +173,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """ViewSet модели Comment."""
 
     serializer_class = CommentSerializer
-    permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
-        IsAuthorOrReadOnly | IsStaffOrReadOnly,
-    )
+    permission_classes = (IsAuthorOrStaff | ReadOnly,)
     pagination_class = pagination.LimitOffsetPagination
 
     def get_review_obj(self):
