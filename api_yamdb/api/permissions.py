@@ -2,6 +2,10 @@ from rest_framework import permissions
 
 
 class IsModeratorOrReadOnly(permissions.BasePermission):
+    """
+    Разрешение на уровне объекта,
+    позволяющее редактировать его только модераторам.
+    """
     message = 'Отказано в доступе!'
 
     def has_object_permission(self, request, view, obj):
@@ -12,6 +16,9 @@ class IsModeratorOrReadOnly(permissions.BasePermission):
 
 
 class IsAdminPermission(permissions.BasePermission):
+    """
+    Разрешение,позволяющее редактировать его только администраторам.
+    """
     message = 'Отказано в доступе!'
 
     def has_permission(self, request, view):
