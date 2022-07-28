@@ -1,6 +1,5 @@
 import uuid
 
-import django_filters
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -8,30 +7,32 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     filters,
     mixins,
+    pagination,
+    permissions,
     response,
     status,
     views,
     viewsets,
-    permissions,
-    pagination,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from reviews.models import Genre, Category, Title, Review
+from .filters import TitleFilter
+from .mixins import ListCreateDestroyViewSet
 from .pagination import UserPagination
-from .permissions import IsAdmin, ReadOnly, IsAuthorOrStaff
+from .permissions import IsAdmin, IsAuthorOrStaff, ReadOnly
 from .serializers import (
     CategorySerializer,
+    CommentSerializer,
     GenreSerializer,
+    GetTokenSerializer,
+    ReviewSerializer,
+    SignupSerializer,
     TitleGetSerializer,
     TitlePostSerializer,
-    GetTokenSerializer,
-    SignupSerializer,
     UserMeSerializer,
     UserSerializer,
-    ReviewSerializer,
-    CommentSerializer,
 )
+from reviews.models import Category, Genre, Review, Title
 
 User = get_user_model()
 
@@ -90,34 +91,6 @@ class GetTokenView(views.APIView):
         return response.Response(
             {'token': str(token)}, status=status.HTTP_200_OK
         )
-
-
-class ListCreateDestroyViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
-):
-    pass
-
-
-class TitleFilter(django_filters.FilterSet):
-    genre = django_filters.CharFilter(
-        field_name="genre__slug", lookup_expr='icontains'
-    )
-    category = django_filters.CharFilter(
-        field_name="category__slug", lookup_expr='icontains'
-    )
-    name = django_filters.CharFilter(lookup_expr='icontains')
-
-    class Meta:
-        model = Title
-        fields = [
-            'genre',
-            'category',
-            'year',
-            'name',
-        ]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
