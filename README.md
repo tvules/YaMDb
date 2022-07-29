@@ -50,7 +50,7 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
     "email": "string",
     "username": "string"
 }
-respons
+response
 {
     "email": "string",
     "username": "string"
@@ -63,7 +63,7 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
     "username": "string",
     "confirmation_code": "string"
 }
-respons
+response
 {
   "token": "string"
 }
@@ -72,7 +72,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/categories/
 
 ```json
-respons
+response
 [
   {
     "count": 0,
@@ -87,7 +87,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/genres/
 
 ```json
-respons
+response
 [
   {
     "count": 0,
@@ -102,7 +102,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/
 
 ```json
-respons
+response
 [
   {
     "count": 0,
@@ -124,7 +124,7 @@ POST http://127.0.0.1:8000/api/v1/titles/
     "genre": ["string"],
     "category": "string"
 }
-respons
+response
 {
   "id": 0,
   "name": "string",
@@ -144,7 +144,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{titles_id}/
 
 ```json
-respons
+response
 {
   "id": 0,
   "name": "string",
@@ -164,7 +164,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
 
 ```json
-respons
+response
 [
   {
     "count": 0,
@@ -183,7 +183,7 @@ POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
   "text": "string",
   "score": 1
 }
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -196,7 +196,7 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
 
 ```json
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -213,7 +213,7 @@ PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
   "text": "string",
   "score": 1
 }
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -229,7 +229,7 @@ DELETE http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/
 
 ```json
-respons
+response
 [
   {
     "count": 0,
@@ -247,7 +247,7 @@ POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments
 {
   "text": "string"
 }
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -258,7 +258,7 @@ respons
 - Получение комментария к отзыву:
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
 ```json
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -273,7 +273,7 @@ PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comment
 {
   "text": "string"
 }
-respons
+response
 {
   "id": 0,
   "text": "string",
@@ -291,7 +291,7 @@ GET http://127.0.0.1:8000/api/v1/users/me/
 {
   "text": "string"
 }
-respons
+response
 {
   "username": "string",
   "email": "user@example.com",
@@ -312,7 +312,7 @@ PATCH http://127.0.0.1:8000/api/v1/users/me/
   "last_name": "string",
   "bio": "string"
 }
-respons
+response
 {
   "username": "string",
   "email": "user@example.com",
@@ -323,6 +323,6 @@ respons
 }
 ```
 ### Авторы
-- Андрей Ростовцев
-- Илья Петрухин
-- Максим Гребенюк
+- [Андрей Ростовцев](https://github.com/Serdron)
+- [Илья Петрухин](https://github.com/tvules)
+- [Максим Гребенюк](https://github.com/Max-arys)
