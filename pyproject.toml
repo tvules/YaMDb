@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+force-exclude = '''
+/(
+  | tests
+  | migrations
+)/
+'''
+[tool.isort]
+profile = "black"
+known_local_folder = ['api', 'users', 'reviews']
+line_length = 79
+extend_skip = ['tests', 'migrations']
