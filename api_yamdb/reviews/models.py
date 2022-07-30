@@ -88,7 +88,7 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.genre} {self.title}'
+        return f'{self.genre.name}-{self.title.name}'
 
 
 class Review(BaseModel):
