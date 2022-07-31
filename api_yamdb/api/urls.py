@@ -1,11 +1,11 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from . import views
 from .views import (
     CategoryViewSet,
     CommentViewSet,
     GenreViewSet,
-    GetTokenView,
     ReviewViewSet,
     SignupView,
     TitleViewSet,
@@ -40,5 +40,5 @@ urlpatterns = [
     ),
     path('v1/', include(router.urls)),
     path('v1/auth/signup/', SignupView.as_view(), name='signup_view'),
-    path('v1/auth/token/', GetTokenView.as_view(), name='gettoken_view'),
+    path('v1/auth/token/', views.gettoken_view, name='gettoken_view'),
 ]

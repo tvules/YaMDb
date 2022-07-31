@@ -14,6 +14,7 @@ from rest_framework import (
     views,
     viewsets,
 )
+from rest_framework.decorators import api_view
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .filters import TitleFilter
@@ -81,16 +82,14 @@ class SignupView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class GetTokenView(views.APIView):
-    def post(self, request):
-        serializer = GetTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        user = User.objects.get(username=username)
-        token = str(RefreshToken.for_user(user).access_token)
-        return response.Response(
-            {'token': str(token)}, status=status.HTTP_200_OK
-        )
+@api_view(['POST'])
+def gettoken_view(request):
+    serializer = GetTokenSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data.get('username')
+    user = User.objects.get(username=username)
+    token = str(RefreshToken.for_user(user).access_token)
+    return response.Response({'token': str(token)}, status=status.HTTP_200_OK)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -112,7 +111,7 @@ class CategoryViewSet(ListCreateDestroyViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     permission_classes = (IsAdmin | ReadOnly,)
-    lookup_field = 'slug'
+    lookup_field = "slug"
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
@@ -121,7 +120,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     permission_classes = (IsAdmin | ReadOnly,)
-    lookup_field = 'slug'
+    lookup_field = "slug"
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

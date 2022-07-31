@@ -1,15 +1,15 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
+from .mixins import BaseUserSerializers
 from reviews.models import Category, Comment, Genre, Review, Title
 
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(BaseUserSerializers):
     class Meta:
         model = User
         fields = (
@@ -21,13 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
         )
 
-    def validate_username(self, value):
-        if value in settings.FORBIDDEN_NAMES:
-            raise serializers.ValidationError('Выберете другое имя')
-        return value
 
-
-class UserMeSerializer(serializers.ModelSerializer):
+class UserMeSerializer(BaseUserSerializers):
     class Meta:
         model = User
         fields = (
@@ -40,21 +35,9 @@ class UserMeSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('role',)
 
-    def validate_username(self, value):
-        if value in settings.FORBIDDEN_NAMES:
-            raise serializers.ValidationError('Выберете другое имя')
-        return value
 
-
-class SignupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username', 'email')
-
-    def validate_username(self, value):
-        if value in settings.FORBIDDEN_NAMES:
-            raise serializers.ValidationError('Выберете другое имя')
-        return value
+class SignupSerializer(BaseUserSerializers):
+    pass
 
 
 class GetTokenSerializer(serializers.Serializer):
