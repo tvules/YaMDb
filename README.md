@@ -38,7 +38,7 @@ response
     "username": "string"
 }
 ```
-- Получение стокена:
+- Получение токена:
 POST http://127.0.0.1:8000/api/v1/auth/token/
 ```json
 {
