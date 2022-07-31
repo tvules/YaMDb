@@ -304,6 +304,7 @@ response
   "role": "user"
 }
 ```
+____
 ### Авторы
 - [Андрей Ростовцев](https://github.com/Serdron)
 - [Илья Петрухин](https://github.com/tvules)
