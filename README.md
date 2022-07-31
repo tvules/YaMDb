@@ -1,11 +1,19 @@
 # api_yamdb
 ### Описание
+<<<<<<< HEAD
 Api_yamdb — это новый сервис о музыке, фильмах и книгах. На нем вы сможете узнать рейтинги популярных произведений поставить им оценки, написать рецензии и комментарии к ним.
+=======
+Api_yamdb — это сервис о музыке, фильмах и книгах. На нем вы сможете узнать рейтинги популярных произведений поставить им оценки, написать рецензии и комментарии к ним.
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 ### Технологии
 - Python 3.7
 - Django==2.2.16
 - djangorestframework==3.12.4
+<<<<<<< HEAD
 ### Запуск проекта dev-режиме
+=======
+### Запуск проекта в dev-режиме
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 Cоздать и активировать виртуальное окружение:
 
 ```
@@ -38,8 +46,13 @@ python3 manage.py migrate
 python3 manage.py runserver
 ```
 ### Примеры запросов
+<<<<<<< HEAD
 Используется аутентификация с использованием JWT-токенов
 Header parameter name: Bearer
+=======
+- Используется аутентификация с использованием JWT-токенов
+- Header parameter name: Bearer
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 
 - Регистрация:
 При валидных данных на указанную почту будет выслан секретный код для получения токена.
@@ -50,7 +63,11 @@ POST http://127.0.0.1:8000/api/v1/auth/signup/
     "email": "string",
     "username": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
     "email": "string",
     "username": "string"
@@ -63,7 +80,11 @@ POST http://127.0.0.1:8000/api/v1/auth/token/
     "username": "string",
     "confirmation_code": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "token": "string"
 }
@@ -72,7 +93,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/categories/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 [
   {
     "count": 0,
@@ -87,7 +112,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/genres/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 [
   {
     "count": 0,
@@ -102,7 +131,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 [
   {
     "count": 0,
@@ -124,7 +157,11 @@ POST http://127.0.0.1:8000/api/v1/titles/
     "genre": ["string"],
     "category": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "name": "string",
@@ -144,7 +181,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{titles_id}/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "name": "string",
@@ -164,7 +205,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 [
   {
     "count": 0,
@@ -183,7 +228,11 @@ POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
   "text": "string",
   "score": 1
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -196,7 +245,11 @@ respons
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -213,7 +266,11 @@ PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
   "text": "string",
   "score": 1
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -229,7 +286,11 @@ DELETE http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/
 
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 [
   {
     "count": 0,
@@ -247,7 +308,11 @@ POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments
 {
   "text": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -258,7 +323,11 @@ respons
 - Получение комментария к отзыву:
 GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
 ```json
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -273,7 +342,11 @@ PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comment
 {
   "text": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "id": 0,
   "text": "string",
@@ -291,7 +364,11 @@ GET http://127.0.0.1:8000/api/v1/users/me/
 {
   "text": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "username": "string",
   "email": "user@example.com",
@@ -312,7 +389,11 @@ PATCH http://127.0.0.1:8000/api/v1/users/me/
   "last_name": "string",
   "bio": "string"
 }
+<<<<<<< HEAD
 respons
+=======
+response
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb
 {
   "username": "string",
   "email": "user@example.com",
@@ -323,6 +404,12 @@ respons
 }
 ```
 ### Авторы
+<<<<<<< HEAD
 Андрей Ростовцев
 Илья Петрухин
 Максим Гребенюк
+=======
+- [Андрей Ростовцев](https://github.com/Serdron)
+- [Илья Петрухин](https://github.com/tvules)
+- [Максим Гребенюк](https://github.com/Max-arys)
+>>>>>>> a85d215d02b53d74655b68b9268af26e070353fb

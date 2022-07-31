@@ -55,8 +55,7 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField('Название', max_length=200)
     year = models.IntegerField(
-        'Год выпуска',
-        validators=[MaxValueValidator(dt.datetime.now().year)]
+        'Год выпуска', validators=[MaxValueValidator(dt.datetime.now().year)]
     )
     description = models.TextField('Описание')
     genre = models.ManyToManyField(
@@ -64,7 +63,7 @@ class Title(models.Model):
         through='GenreTitle',
         related_name='titles',
         blank=True,
-        verbose_name='Жанр'
+        verbose_name='Жанр',
     )
     category = models.ForeignKey(
         Category,
@@ -72,7 +71,7 @@ class Title(models.Model):
         related_name='titles',
         blank=True,
         null=True,
-        verbose_name='Категория'
+        verbose_name='Категория',
     )
 
     class Meta:
@@ -89,7 +88,7 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.genre} {self.title}'
+        return f'{self.genre.name}-{self.title.name}'
 
 
 class Review(BaseModel):

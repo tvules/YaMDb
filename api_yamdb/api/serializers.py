@@ -1,9 +1,9 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from rest_framework import serializers
 
-from reviews.models import Category, Title, Genre, Review, Comment
+from reviews.models import Category, Comment, Genre, Review, Title
 from users.models import ROLE_CHOICES
 
 User = get_user_model()
@@ -17,42 +17,47 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "username", "email", "first_name", "last_name", "bio", "role"
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
         )
 
     def validate_username(self, value):
         if value in forbidden_names:
-            raise serializers.ValidationError(
-                'Выберете другое имя')
+            raise serializers.ValidationError('Выберете другое имя')
         return value
 
 
 class UserMeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = (
-            "username", "email", "first_name", "last_name", "bio", "role"
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "bio",
+            "role",
         )
         read_only_fields = ("role",)
 
     def validate_username(self, value):
         if value in forbidden_names:
-            raise serializers.ValidationError(
-                'Выберете другое имя')
+            raise serializers.ValidationError('Выберете другое имя')
         return value
 
 
 class SignupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ("username", "email")
 
     def validate_username(self, value):
         if value in forbidden_names:
-            raise serializers.ValidationError(
-                'Выберете другое имя')
+            raise serializers.ValidationError('Выберете другое имя')
         return value
 
 
@@ -66,12 +71,12 @@ class GetTokenSerializer(serializers.Serializer):
         input_confirmation_code = data.get('confirmation_code')
         if input_confirmation_code != user.confirmation_code:
             raise serializers.ValidationError(
-                'Введите действующий код подтверждения.')
+                'Введите действующий код подтверждения.'
+            )
         return data
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ("name", "slug")
@@ -79,7 +84,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Genre
         fields = ("name", "slug")
@@ -109,8 +113,8 @@ class TitleGetSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_rating(self, obj):
-        return obj.reviews.all().aggregate(Avg('score')).get(
-            'score__avg', 0.00
+        return (
+            obj.reviews.all().aggregate(Avg('score')).get('score__avg', 0.00)
         )
 
 
