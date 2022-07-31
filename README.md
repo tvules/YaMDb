@@ -1,36 +1,24 @@
 # api_yamdb
 ### Описание
 Api_yamdb — это сервис о музыке, фильмах и книгах. На нем вы сможете узнать рейтинги популярных произведений поставить им оценки, написать рецензии и комментарии к ним.
+____
 ### Технологии
 - Python 3.7
 - Django==2.2.16
 - djangorestframework==3.12.4
+____
 ### Запуск проекта в dev-режиме
-Cоздать и активировать виртуальное окружение:
-
-```
-python3 -m venv env
-source env/bin/activate
-python3 -m pip install --upgrade pip
-```
-
-Установить зависимости из файла requirements.txt:
-
-```
-pip install -r requirements.txt
-```
-
-Выполнить миграции:
-
-```
-python3 manage.py migrate
-```
-
-Запустить проект:
-
-```
-python3 manage.py runserver
-```
+- Cоздать и активировать виртуальное окружение:
+    - python3 -m venv env
+    - source env/bin/activate
+    - python3 -m pip install --upgrade pip
+- Установить зависимости из файла requirements.txt:
+    - pip install -r requirements.txt
+- Выполнить миграции:
+    - python3 manage.py migrate
+- Запустить проект:
+    - python3 manage.py runserver
+____
 ### Примеры запросов
 - Используется аутентификация с использованием JWT-токенов
 - Header parameter name: Bearer
