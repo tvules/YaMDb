@@ -1,32 +1,28 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from reviews.models import Category, Comment, Genre, Review, Title
-from users.models import ROLE_CHOICES
 
 User = get_user_model()
 
-forbidden_names = ('me', 'admin', 'moderator')
-
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.ChoiceField(choices=ROLE_CHOICES, required=False)
-
     class Meta:
         model = User
         fields = (
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "bio",
-            "role",
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role',
         )
 
     def validate_username(self, value):
-        if value in forbidden_names:
+        if value in settings.FORBIDDEN_NAMES:
             raise serializers.ValidationError('Выберете другое имя')
         return value
 
@@ -35,17 +31,17 @@ class UserMeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "bio",
-            "role",
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role',
         )
-        read_only_fields = ("role",)
+        read_only_fields = ('role',)
 
     def validate_username(self, value):
-        if value in forbidden_names:
+        if value in settings.FORBIDDEN_NAMES:
             raise serializers.ValidationError('Выберете другое имя')
         return value
 
@@ -53,10 +49,10 @@ class UserMeSerializer(serializers.ModelSerializer):
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email")
+        fields = ('username', 'email')
 
     def validate_username(self, value):
-        if value in forbidden_names:
+        if value in settings.FORBIDDEN_NAMES:
             raise serializers.ValidationError('Выберете другое имя')
         return value
 
@@ -79,15 +75,15 @@ class GetTokenSerializer(serializers.Serializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ("name", "slug")
-        lookup_field = "slug"
+        fields = ('name', 'slug')
+        lookup_field = 'slug'
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ("name", "slug")
-        lookup_field = "slug"
+        fields = ('name', 'slug')
+        lookup_field = 'slug'
 
 
 class TitlePostSerializer(serializers.ModelSerializer):
@@ -100,7 +96,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = "__all__"
+        fields = '__all__'
 
 
 class TitleGetSerializer(serializers.ModelSerializer):
@@ -110,7 +106,7 @@ class TitleGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = "__all__"
+        fields = '__all__'
 
     def get_rating(self, obj):
         return (
@@ -131,7 +127,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'author', 'score', 'pub_date')
 
     def validate(self, attrs):
-        if self.context.get('request').method != "POST":
+        if self.context.get('request').method != 'POST':
             return attrs
 
         author = self.context.get('request').user

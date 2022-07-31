@@ -112,7 +112,7 @@ class CategoryViewSet(ListCreateDestroyViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     permission_classes = (IsAdmin | ReadOnly,)
-    lookup_field = "slug"
+    lookup_field = 'slug'
 
 
 class GenreViewSet(ListCreateDestroyViewSet):
@@ -121,7 +121,7 @@ class GenreViewSet(ListCreateDestroyViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     permission_classes = (IsAdmin | ReadOnly,)
-    lookup_field = "slug"
+    lookup_field = 'slug'
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
