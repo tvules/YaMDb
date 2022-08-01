@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
@@ -14,6 +15,7 @@ from rest_framework import (
     views,
     viewsets,
 )
+from rest_framework.decorators import api_view
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .filters import TitleFilter
@@ -81,20 +83,18 @@ class SignupView(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class GetTokenView(views.APIView):
-    def post(self, request):
-        serializer = GetTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        user = User.objects.get(username=username)
-        token = str(RefreshToken.for_user(user).access_token)
-        return response.Response(
-            {'token': str(token)}, status=status.HTTP_200_OK
-        )
+@api_view(['POST'])
+def gettoken_view(request):
+    serializer = GetTokenSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    username = serializer.validated_data.get('username')
+    user = User.objects.get(username=username)
+    token = str(RefreshToken.for_user(user).access_token)
+    return response.Response({'token': str(token)}, status=status.HTTP_200_OK)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     serializer_class = TitleGetSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = TitleFilter

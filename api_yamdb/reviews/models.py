@@ -1,8 +1,8 @@
-import datetime as dt
-
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from .validators import validate_year
 
 User = get_user_model()
 
@@ -28,12 +28,12 @@ class BaseModel(models.Model):
 
 class Category(models.Model):
     name = models.CharField('Название', max_length=200)
-    slug = models.SlugField('Идентификатор', unique=True)
+    slug = models.SlugField('Идентификатор', db_index=True, unique=True)
 
     class Meta:
         ordering = ('name',)
-        verbose_name_plural = "Категории"
-        verbose_name = "Категория"
+        verbose_name_plural = 'Категории'
+        verbose_name = 'Категория'
 
     def __str__(self):
         return self.title
@@ -41,21 +41,21 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField('Название', max_length=200)
-    slug = models.SlugField('Идентификатор', unique=True)
+    slug = models.SlugField('Идентификатор', db_index=True, unique=True)
 
     class Meta:
         ordering = ('name',)
-        verbose_name_plural = "Жанры"
-        verbose_name = "Жанр"
+        verbose_name_plural = 'Жанры'
+        verbose_name = 'Жанр'
 
     def __str__(self):
         return self.title
 
 
 class Title(models.Model):
-    name = models.CharField('Название', max_length=200)
+    name = models.CharField('Название', db_index=True, max_length=200)
     year = models.IntegerField(
-        'Год выпуска', validators=[MaxValueValidator(dt.datetime.now().year)]
+        'Год выпуска', db_index=True, validators=[validate_year]
     )
     description = models.TextField('Описание')
     genre = models.ManyToManyField(
@@ -76,8 +76,8 @@ class Title(models.Model):
 
     class Meta:
         ordering = ('name',)
-        verbose_name_plural = "Произведения"
-        verbose_name = "Произведение"
+        verbose_name_plural = 'Произведения'
+        verbose_name = 'Произведение'
 
     def __str__(self):
         return self.name
@@ -88,7 +88,7 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.genre} {self.title}'
+        return f'{self.genre.name}-{self.title.name}'
 
 
 class Review(BaseModel):
