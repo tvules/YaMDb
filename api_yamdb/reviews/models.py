@@ -1,8 +1,8 @@
-import datetime as dt
-
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from .validators import validate_year
 
 User = get_user_model()
 
@@ -28,7 +28,7 @@ class BaseModel(models.Model):
 
 class Category(models.Model):
     name = models.CharField('Название', max_length=200)
-    slug = models.SlugField('Идентификатор', unique=True)
+    slug = models.SlugField('Идентификатор', db_index=True, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -41,7 +41,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField('Название', max_length=200)
-    slug = models.SlugField('Идентификатор', unique=True)
+    slug = models.SlugField('Идентификатор', db_index=True, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -53,9 +53,9 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.CharField('Название', max_length=200)
+    name = models.CharField('Название', db_index=True, max_length=200)
     year = models.IntegerField(
-        'Год выпуска', validators=[MaxValueValidator(dt.datetime.now().year)]
+        'Год выпуска', db_index=True, validators=[validate_year]
     )
     description = models.TextField('Описание')
     genre = models.ManyToManyField(

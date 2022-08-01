@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.db.models import Avg
+
+# from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -106,16 +107,11 @@ class TitlePostSerializer(serializers.ModelSerializer):
 class TitleGetSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    rating = serializers.SerializerMethodField()
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Title
         fields = "__all__"
-
-    def get_rating(self, obj):
-        return (
-            obj.reviews.all().aggregate(Avg('score')).get('score__avg', 0.00)
-        )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
