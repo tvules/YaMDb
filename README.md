@@ -8,6 +8,7 @@ ____
 - djangorestframework==3.12.4
 ____
 ### Запуск проекта в dev-режиме
+
 - Cоздать и активировать виртуальное окружение:
     - python3 -m venv env
     - source env/bin/activate
@@ -18,7 +19,7 @@ ____
     - python3 manage.py migrate
 - Запустить проект:
     - python3 manage.py runserver
-____
+
 ### Примеры запросов
 - Используется аутентификация с использованием JWT-токенов
 - Header parameter name: Bearer
