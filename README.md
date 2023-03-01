@@ -50,7 +50,7 @@
 1. Клонировать репозиторий:
 
     ```shell
-    git clone https://github.com/tvules/api_yamdb.git
+    git clone https://github.com/tvules/YaMDb.git
     cd YaMDb
     ```
     
