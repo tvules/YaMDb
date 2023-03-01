@@ -1,312 +1,115 @@
-# api_yamdb
-### Описание
-Api_yamdb — это сервис о музыке, фильмах и книгах. На нем вы сможете узнать рейтинги популярных произведений поставить им оценки, написать рецензии и комментарии к ним.
-____
+# YaMDb
+
+<details>
+  <summary>Содержание</summary>
+  <ul>
+    <li>
+      <a href="#описание">Описание</a>
+      <ul>
+        <li><a href="#-особенности">Особенности</a></li>
+        <li><a href="#технологии">Технологии</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#-начало-работы">Начало работы</a>
+      <ul>
+          <li><a href="#установка">Установка</a></li>
+          <li><a href="#запуск-development">Запуск (Development)</a></li>
+      </ul>
+    </li>
+    <li><a href="#-использование">Использование</a></li>
+    <li><a href="#-авторы">Авторы</a></li>
+  </ul>
+</details>
+
+Проект YaMDb собирает отзывы пользователей на произведения. Сами произведения в YaMDb не хранятся, здесь нельзя посмотреть фильм или послушать музыку.
+
+<a name="описание"></a>
+
+### 🔥 Особенности
+
+- Произведения делятся на категории: «Книги», «Фильмы», «Музыка».
+Список категорий может быть расширен. Также произведению может быть присвоен жанр.
+- Благодарные или возмущённые пользователи оставляют к произведениям текстовые отзывы и ставят оценку.
+Из пользовательских оценок формируется усреднённая оценка произведения — рейтинг.
+- Пользователи могут оставлять комментарии к отзывам.
+
 ### Технологии
-- Python 3.7
-- Django==2.2.16
-- djangorestframework==3.12.4
-____
-### Запуск проекта в dev-режиме
 
-- Cоздать и активировать виртуальное окружение:
-    - python3 -m venv env
-    - source env/bin/activate
-    - python3 -m pip install --upgrade pip
-- Установить зависимости из файла requirements.txt:
-    - pip install -r requirements.txt
-- Выполнить миграции:
-    - python3 manage.py migrate
-- Запустить проект:
-    - python3 manage.py runserver
+[![Django][Django-badge]][Django-url]
+[![DjangoREST][DjangoREST-badge]][DjangoREST-badge]
 
-### Примеры запросов
-- Используется аутентификация с использованием JWT-токенов
-- Header parameter name: Bearer
+## ⚙ Начало Работы
 
-- Регистрация:
-При валидных данных на указанную почту будет выслан секретный код для получения токена.
-POST http://127.0.0.1:8000/api/v1/auth/signup/
+> **Warning**:
+> Необходимы предустановленные зависимости:
+> - Python 3.7+
 
-```json
-{
-    "email": "string",
-    "username": "string"
-}
-response
-{
-    "email": "string",
-    "username": "string"
-}
-```
-- Получение токена:
-POST http://127.0.0.1:8000/api/v1/auth/token/
-```json
-{
-    "username": "string",
-    "confirmation_code": "string"
-}
-response
-{
-  "token": "string"
-}
-```
-- Получение списка всех категорий:
-GET http://127.0.0.1:8000/api/v1/categories/
+### Установка
 
-```json
-response
-[
-  {
-    "count": 0,
-    "next": "string",
-    "previous": "string",
-    "results":
-      [...]
-  }
-]
-```
-- Получение списка всех жанров:
-GET http://127.0.0.1:8000/api/v1/genres/
+1. Клонировать репозиторий:
 
-```json
-response
-[
-  {
-    "count": 0,
-    "next": "string",
-    "previous": "string",
-    "results":
-      [...]
-  }
-]
-```
-- Получение списка всех произведений:
-GET http://127.0.0.1:8000/api/v1/titles/
+    ```shell
+    git clone https://github.com/tvules/api_yamdb.git
+    cd YaMDb
+    ```
+    
+2. Создать и активировать виртуальное окружение:
 
-```json
-response
-[
-  {
-    "count": 0,
-    "next": "string",
-    "previous": "string",
-    "results":
-      [...]
-  }
-]
-```
-- Добавление произведения:
-POST http://127.0.0.1:8000/api/v1/titles/
+    ```shell
+    python -m venv venv
+    ```
+    Для Windows:
 
-```json
-{
-    "name": "string",
-    "year": 0,
-    "description": "string",
-    "genre": ["string"],
-    "category": "string"
-}
-response
-{
-  "id": 0,
-  "name": "string",
-  "year": 0,
-  "rating": 0,
-  "description": "string",
-  "genre":
-    [{...}],
-  "category": 
-    {
-      "name": "string",
-      "slug": "string"
-    }
-}
-```
-- Получение информации о произведении:
-GET http://127.0.0.1:8000/api/v1/titles/{titles_id}/
+    ```shell
+    venv\Scripts\activate.bat
+    ```
 
-```json
-response
-{
-  "id": 0,
-  "name": "string",
-  "year": 0,
-  "rating": 0,
-  "description": "string",
-  "genre": 
-    [{...}],
-  "category": 
-    {
-      "name": "string",
-      "slug": "string"
-    }
-}
-```
-- Получение списка всех отзывов:
-GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
+    Для Unix/MacOS:
 
-```json
-response
-[
-  {
-    "count": 0,
-    "next": "string",
-    "previous": "string",
-    "results": 
-      [...]
-  }
-]
-```
-- Добавление нового отзыва:
-POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/
+    ```shell
+    source venv/bin/activate
+    ```
 
-```json
-{
-  "text": "string",
-  "score": 1
-}
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "score": 1,
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Полуение отзыва по id:
-GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
+3. Установить зависимости проекта:
 
-```json
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "score": 1,
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Редактирование отзыва по id:
-PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
+    ```shell
+    pip install -r requirements.txt
+    ```
+    
+### Запуск (Development)
 
-```json
-{
-  "text": "string",
-  "score": 1
-}
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "score": 1,
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Удаление отзыва по id:
-DELETE http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/
+1. Выполнить миграции базы данных:
 
-- Получение списка всех комментариев к отзыву:
-GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/
+    ```shell
+    python manage.py migrate
+    ```
+    
+2. Запустить приложение:
 
-```json
-response
-[
-  {
-    "count": 0,
-    "next": "string",
-    "previous": "string",
-    "results": 
-      []
-  }
-]
-```
-- Добавление комментария к отзыву:
-POST http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/
+    ```shell
+    python manage.py runserver
+    ```
 
-```json
-{
-  "text": "string"
-}
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Получение комментария к отзыву:
-GET http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
-```json
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Pедактирование комментария к отзыву:
-PATCH http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
+## 👀 Использование
 
-```json
-{
-  "text": "string"
-}
-response
-{
-  "id": 0,
-  "text": "string",
-  "author": "string",
-  "pub_date": "2019-08-24T14:15:22Z"
-}
-```
-- Удаление комментария к отзыву:
-DELETE http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/
+[Redoc](https://github.com/tvules/api_yamdb/blob/master/api_yamdb/static/redoc.yaml) — Полная документация к **API** проекта.
 
-- Получение данных своей учетной записи:
-GET http://127.0.0.1:8000/api/v1/users/me/
+> **Note**:
+> Для просмотра документации загрузите файл на сайт — https://redocly.github.io/redoc/.
 
-```json
-{
-  "text": "string"
-}
-response
-{
-  "username": "string",
-  "email": "user@example.com",
-  "first_name": "string",
-  "last_name": "string",
-  "bio": "string",
-  "role": "user"
-}
-```
-- Изменение данных своей учетной записи:
-PATCH http://127.0.0.1:8000/api/v1/users/me/
+## 🧾 Авторы
 
-```json
-{
-  "username": "string",
-  "email": "user@example.com",
-  "first_name": "string",
-  "last_name": "string",
-  "bio": "string"
-}
-response
-{
-  "username": "string",
-  "email": "user@example.com",
-  "first_name": "string",
-  "last_name": "string",
-  "bio": "string",
-  "role": "user"
-}
-```
-____
-### Авторы
-- [Андрей Ростовцев](https://github.com/Serdron)
-- [Илья Петрухин](https://github.com/tvules)
-- [Максим Гребенюк](https://github.com/Max-arys)
+- **Андрей Ростовцев** (*Разработчик*) — **[GitHub](https://github.com/Serdron)**
+- **Илья Петрухин** (*Тимлид, Разработчик*) — **[GitHub](https://github.com/tvules)**
+- **Максим Гребенюк** (*Разработчик*) — **[GitHub](https://github.com/Max-arys)**
+
+<!-- MARKDOWN LINKS & BADGES -->
+
+[Django-url]: https://www.djangoproject.com/
+
+[Django-badge]: https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white
+
+[DjangoREST-url]: https://www.django-rest-framework.org/
+
+[DjangoREST-badge]: https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray
